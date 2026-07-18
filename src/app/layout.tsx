@@ -4,6 +4,7 @@ import './globals.css';
 import QueryProvider from '../providers/QueryProvider';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import FetchInterceptor from '../components/FetchInterceptor';
 import { Toaster } from 'sonner';
 
 const geistSans = Geist({
@@ -29,6 +30,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased dark`}>
       <body className="min-h-full flex flex-col bg-zinc-950 text-zinc-50 font-sans">
+        <FetchInterceptor />
         <QueryProvider>
           <div className="flex flex-col min-h-screen">
             <Navbar />
