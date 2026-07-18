@@ -2,11 +2,12 @@ import { betterAuth } from 'better-auth';
 import { mongodbAdapter } from 'better-auth/adapters/mongodb';
 import { MongoClient } from 'mongodb';
 
-if (!process.env.MONGODB_URI) {
-  throw new Error('Please define the MONGODB_URI environment variable in .env');
+const mongoUri = process.env.MONGODB_URI;
+if (!mongoUri && process.env.NODE_ENV === 'production' && typeof window === 'undefined') {
+  console.warn('WARNING: MONGODB_URI is not set. Using local database placeholder for compilation.');
 }
 
-const client = new MongoClient(process.env.MONGODB_URI);
+const client = new MongoClient(mongoUri || 'mongodb://localhost:27017/novalibrary_placeholder');
 const db = client.db();
 
 export const auth = betterAuth({
