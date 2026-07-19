@@ -20,7 +20,7 @@ const bookUploadSchema = z.object({
   tags: z.string().optional(),
   description: z.string().optional(),
 });
-const CATEGORIES = ['All', 'Finance', 'Fiction', 'Science', 'Biography', 'Technology', 'History', 'h'];
+const CATEGORIES = ['All', 'Finance', 'Fiction', 'Science', 'Biography', 'Technology', 'History'];
 const LANGUAGES = ['All', 'English', 'Bangla', 'Spanish', 'French', 'German'];
 const READING_LEVELS = ['All', 'Beginner', 'Intermediate', 'Advanced'];
 
@@ -43,14 +43,9 @@ export default function BookUploadPage() {
   const [pdfName, setPdfName] = useState('');
   const [coverName, setCoverName] = useState('');
 
-  const [aiSummary, setAiSummary] = useState('');
-  const [keyPoints, setKeyPoints] = useState<string[]>([]);
-  const [isAnalyzing, setIsAnalyzing] = useState(false);
-
   const {
     register,
     handleSubmit,
-    setValue,
     formState: { errors },
     reset,
   } = useForm<BookUploadFormValues>({
@@ -92,7 +87,7 @@ export default function BookUploadPage() {
     },
   });
 
-  const handlePdfChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePdfChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       if (file.type !== 'application/pdf') {
@@ -101,49 +96,6 @@ export default function BookUploadPage() {
       }
       setPdfFile(file);
       setPdfName(file.name);
-
-      // Trigger AI Auto Classification & Concept Extraction
-      setIsAnalyzing(true);
-      const toastId = toast.loading('Nova AI is reading and classifying your PDF...');
-      try {
-        const formData = new FormData();
-        formData.append('pdf', file);
-
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
-        const response = await fetch(`${apiUrl}/books/analyze-pdf`, {
-          method: 'POST',
-          body: formData,
-          credentials: 'include',
-        });
-
-        if (!response.ok) {
-          const errData = await response.json();
-          throw new Error(errData.message || 'Failed to analyze PDF.');
-        }
-
-        const data = await response.json();
-
-        // Auto fill form fields
-        if (data.title) setValue('title', data.title);
-        if (data.author) setValue('author', data.author);
-        if (data.genre) setValue('genre', data.genre);
-        if (data.readingLevel) setValue('readingLevel', data.readingLevel);
-        if (data.description) setValue('description', data.description);
-        if (data.tags && Array.isArray(data.tags)) {
-          setValue('tags', data.tags.join(', '));
-        }
-
-        // Save generated summary & key points
-        if (data.summary) setAiSummary(data.summary);
-        if (data.keyPoints) setKeyPoints(data.keyPoints);
-
-        toast.success('AI Auto-classification completed!', { id: toastId });
-      } catch (err: any) {
-        console.error('PDF AI Analysis failed:', err);
-        toast.error(err.message || 'AI parsing failed. Please input fields manually.', { id: toastId });
-      } finally {
-        setIsAnalyzing(false);
-      }
     }
   };
 
@@ -176,12 +128,6 @@ export default function BookUploadPage() {
     formData.append('pdf', pdfFile);
     if (coverFile) {
       formData.append('cover', coverFile);
-    }
-    if (aiSummary) {
-      formData.append('aiSummary', aiSummary);
-    }
-    if (keyPoints && keyPoints.length > 0) {
-      formData.append('keyPoints', JSON.stringify(keyPoints));
     }
 
     uploadMutation.mutate(formData);
@@ -314,129 +260,39 @@ export default function BookUploadPage() {
               />
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {/* PDF Document Upload (Required Drag & Drop) */}
-              <div>
-                <label className="block text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">PDF Document File</label>
-                <div className="relative h-44 border-2 border-dashed border-zinc-800 hover:border-primary/40 rounded-2xl bg-zinc-950/50 transition-colors flex items-center justify-center">
-                  <input
-                    type="file"
-                    id="pdf-upload"
-                    accept="application/pdf"
-                    disabled={isAnalyzing}
-                    onChange={handlePdfChange}
-                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed"
-                  />
-                  <div className="flex flex-col items-center justify-center p-4 text-center space-y-2">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-zinc-900 border border-zinc-800 text-primary mb-1">
-                      {isAnalyzing ? (
-                        <Loader2 className="h-5 w-5 animate-spin" />
-                      ) : (
-                        <Upload className="h-5 w-5" />
-                      )}
+            {/* PDF Document Upload (Required Drag & Drop) */}
+            <div>
+              <label className="block text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">PDF Document File</label>
+              <div className="relative border-2 border-dashed border-zinc-800 hover:border-primary/40 rounded-2xl bg-zinc-950/50 transition-colors">
+                <input
+                  type="file"
+                  id="pdf-upload"
+                  accept="application/pdf"
+                  onChange={handlePdfChange}
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                />
+                <div className="flex flex-col items-center justify-center p-8 text-center space-y-2">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-zinc-900 border border-zinc-800 text-primary mb-1">
+                    <Upload className="h-5 w-5" />
+                  </div>
+                  {pdfName ? (
+                    <div className="space-y-1">
+                      <p className="text-sm font-semibold text-white truncate max-w-md px-4">{pdfName}</p>
+                      <p className="text-xs text-zinc-500">{(pdfFile!.size / (1024 * 1024)).toFixed(2)} MB • PDF file selected</p>
                     </div>
-                    {isAnalyzing ? (
-                      <div className="space-y-1">
-                        <p className="text-xs font-semibold text-primary">Nova AI is reading PDF...</p>
-                        <p className="text-[10px] text-zinc-500">Extracting metadata and concepts</p>
-                      </div>
-                    ) : pdfName ? (
-                      <div className="space-y-1">
-                        <p className="text-xs font-semibold text-white truncate max-w-[200px] px-2">{pdfName}</p>
-                        <p className="text-[10px] text-zinc-500">{(pdfFile!.size / (1024 * 1024)).toFixed(2)} MB • PDF selected</p>
-                      </div>
-                    ) : (
-                      <div className="space-y-1">
-                        <p className="text-xs font-semibold text-zinc-300">Drag & drop your PDF file</p>
-                        <p className="text-[10px] text-zinc-500">or click to browse (max 10MB)</p>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              {/* Cover Photo Upload */}
-              <div>
-                <label className="block text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">Book Cover Image</label>
-                <div className="relative h-44 border-2 border-dashed border-zinc-800 hover:border-primary/40 rounded-2xl bg-zinc-950/50 transition-colors flex items-center justify-center overflow-hidden">
-                  <input
-                    type="file"
-                    id="cover-upload"
-                    accept="image/*"
-                    onChange={handleCoverChange}
-                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
-                  />
-                  <div className="flex flex-col items-center justify-center p-4 text-center space-y-1">
-                    {coverFile ? (
-                      <div className="flex flex-col items-center space-y-1 z-20">
-                        {/* Show image preview */}
-                        <div className="relative h-20 w-14 rounded-md overflow-hidden border border-zinc-700 bg-zinc-900 shadow-md">
-                          <img
-                            src={URL.createObjectURL(coverFile)}
-                            alt="Cover Preview"
-                            className="h-full w-full object-cover"
-                          />
-                        </div>
-                        <p className="text-xs font-semibold text-white truncate max-w-[200px] px-2">{coverName}</p>
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            setCoverFile(null);
-                            setCoverName('');
-                          }}
-                          className="text-[10px] text-red-400 hover:text-red-300 underline cursor-pointer"
-                        >
-                          Remove Cover
-                        </button>
-                      </div>
-                    ) : (
-                      <>
-                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-zinc-900 border border-zinc-800 text-primary mb-1">
-                          <ImageIcon className="h-5 w-5" />
-                        </div>
-                        <div className="space-y-1">
-                          <p className="text-xs font-semibold text-zinc-300">Upload cover image</p>
-                          <p className="text-[10px] text-zinc-500">Drag & drop or click to browse</p>
-                        </div>
-                      </>
-                    )}
-                  </div>
+                  ) : (
+                    <div className="space-y-1">
+                      <p className="text-sm font-semibold text-zinc-300">Drag & drop your PDF file here</p>
+                      <p className="text-xs text-zinc-500">or click to browse local files (max 10MB)</p>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
 
-
-            {/* AI intelligence preview */}
-            {(aiSummary || keyPoints.length > 0) && (
-              <div className="rounded-xl border border-primary/20 bg-primary/5 p-4 space-y-3">
-                <h3 className="text-xs font-bold text-primary uppercase tracking-wider flex items-center gap-1.5">
-                  <Sparkles className="h-4 w-4 animate-pulse" />
-                  AI Document Intelligence Results
-                </h3>
-                {aiSummary && (
-                  <div className="space-y-1">
-                    <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider">AI Generated Summary</p>
-                    <p className="text-xs text-zinc-300 leading-relaxed">{aiSummary}</p>
-                  </div>
-                )}
-                {keyPoints.length > 0 && (
-                  <div className="space-y-1 pt-1.5">
-                    <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider">Core Takeaways / Key Points</p>
-                    <ul className="list-disc list-inside text-xs text-zinc-350 space-y-1">
-                      {keyPoints.map((point, index) => (
-                        <li key={index}>{point}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-              </div>
-            )}
-
             {/* Info Message */}
-            <div className="flex gap-2.5 items-start border border-zinc-800 bg-zinc-900/40 rounded-xl p-3.5 text-xs text-zinc-400">
-              <Info className="h-4.5 w-4.5 shrink-0 mt-0.5 text-primary" />
+            <div className="flex gap-2.5 items-start bg-primary/5 border border-primary/20 rounded-xl p-3.5 text-xs text-primary/80">
+              <Info className="h-4.5 w-4.5 shrink-0 mt-0.5" />
               <p className="leading-relaxed">
                 By uploading, our server will extract full PDF text and use Google Gemini to automatically generate a summary of key concepts for other readers.
               </p>
