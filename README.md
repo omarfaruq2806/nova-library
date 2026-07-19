@@ -1,9 +1,5 @@
 # NovaLibrary 📚✨
 
-[![AI-Assisted Development](https://img.shields.io/badge/AI--Assisted-Development-blueviolet?style=for-the-badge&logo=google-gemini)](https://github.com/google-deepmind)
-[![Framework](https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=nextdotjs)](https://nextjs.org/)
-[![Database](https://img.shields.io/badge/MongoDB-Native-green?style=for-the-badge&logo=mongodb)](https://www.mongodb.com/)
-[![Storage](https://img.shields.io/badge/Supabase-Storage-emerald?style=for-the-badge&logo=supabase)](https://supabase.com/)
 
 NovaLibrary is an **AI-powered digital library** designed to make reading, learning, and discovering knowledge more engaging and intelligent. Instead of simply storing books, NovaLibrary leverages generative AI to help readers parse contents faster, extract insights, and chat directly with uploaded books.
 
