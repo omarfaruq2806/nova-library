@@ -68,19 +68,29 @@ export default function DiscoverBooks() {
   return (
     <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative">
       <div className="space-y-10">
-        
+
         {/* Section Header */}
-        <div className="text-center space-y-4 max-w-2xl mx-auto pb-6 border-b border-zinc-900">
-          <div className="inline-flex items-center gap-1.5 rounded-full bg-secondary/10 border border-secondary/20 px-3.5 py-1.5 text-xs font-black uppercase text-secondary tracking-widest">
-            <BookMarked className="h-3.5 w-3.5" />
-            <span>Catalog Discovery</span>
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 border-b border-zinc-900 pb-6">
+          <div className="text-center space-y-4">
+            <div className="inline-flex items-center gap-1.5 rounded-full bg-secondary/10 border border-secondary/20 px-3.5 py-1 text-xs font-black uppercase text-secondary tracking-widest">
+              <BookMarked className="h-3.5 w-3.5" />
+              <span>Catalog Discovery</span>
+            </div>
+            <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-white">
+              Discover Books
+            </h2>
+            <p className="text-sm text-zinc-400 max-w-lg leading-relaxed">
+              Explore curated lists, trending uploads, and staff picks from our AI-powered library ecosystem.
+            </p>
           </div>
-          <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-white">
-            Discover Books
-          </h2>
-          <p className="text-sm text-zinc-400 leading-relaxed">
-            Explore curated lists, trending uploads, and staff picks from our AI-powered library ecosystem.
-          </p>
+
+          <Link
+            href="/books"
+            className="group flex items-center gap-1.5 text-xs font-bold text-primary hover:text-white transition-colors uppercase tracking-wider border-b border-primary/20 pb-0.5"
+          >
+            <span>View Full Library</span>
+            <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform" />
+          </Link>
         </div>
 
         {/* Dynamic Navigation Tabs */}
@@ -92,9 +102,8 @@ export default function DiscoverBooks() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as TabType)}
-                  className={`relative flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all duration-300 cursor-pointer whitespace-nowrap ${
-                    isActive ? 'text-white' : 'text-zinc-400 hover:text-zinc-200'
-                  }`}
+                  className={`relative flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all duration-300 cursor-pointer whitespace-nowrap ${isActive ? 'text-white' : 'text-zinc-400 hover:text-zinc-200'
+                    }`}
                 >
                   {isActive && (
                     <motion.div
@@ -142,7 +151,7 @@ export default function DiscoverBooks() {
           </div>
         ) : (
           /* Books Grid - Horizontal Cards */
-          <motion.div 
+          <motion.div
             layout
             className="grid grid-cols-1 lg:grid-cols-2 gap-6"
           >
@@ -187,7 +196,7 @@ export default function DiscoverBooks() {
                           {book.readingLevel}
                         </span>
                       </div>
-                      
+
                       <div className="space-y-0.5">
                         <h3 className="text-sm font-bold text-white group-hover:text-primary transition-colors line-clamp-1 leading-snug">
                           {book.title}
@@ -216,18 +225,6 @@ export default function DiscoverBooks() {
               ))}
             </AnimatePresence>
           </motion.div>
-        )}
-
-        {books.length > 0 && (
-          <div className="flex justify-center pt-6">
-            <Link
-              href="/books"
-              className="group flex items-center gap-2 rounded-xl border border-zinc-800 bg-zinc-900/40 hover:bg-zinc-900/60 px-6 py-3 text-xs font-bold text-white hover:text-primary transition-all active:scale-95 uppercase tracking-wider cursor-pointer"
-            >
-              <span>View Full Library</span>
-              <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform animate-pulse" />
-            </Link>
-          </div>
         )}
       </div>
     </section>
