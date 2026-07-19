@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { BookOpen, ExternalLink, Heart } from 'lucide-react';
+import { BookOpen, ExternalLink } from 'lucide-react';
 
 export default function Footer() {
   return (
