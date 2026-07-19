@@ -37,13 +37,10 @@ export default function Footer() {
                 <Link href="/" className="hover:text-primary transition-colors">Home</Link>
               </li>
               <li>
+                <Link href="/about" className="hover:text-primary transition-colors">About Us</Link>
+              </li>
+              <li>
                 <Link href="/books" className="hover:text-primary transition-colors">Bookshelf</Link>
-              </li>
-              <li>
-                <Link href="/chat" className="hover:text-primary transition-colors">AI Chat</Link>
-              </li>
-              <li>
-                <Link href="/ai-librarian" className="hover:text-primary transition-colors">AI Librarian</Link>
               </li>
             </ul>
           </div>
@@ -54,10 +51,13 @@ export default function Footer() {
             <h4 className="text-xs font-black uppercase tracking-wider text-white">Resources</h4>
             <ul className="space-y-2 text-xs font-bold">
               <li>
-                <Link href="#" className="hover:text-primary transition-colors">Privacy Policy</Link>
+                <Link href="/contact" className="hover:text-primary transition-colors">Contact Us</Link>
               </li>
               <li>
-                <Link href="#" className="hover:text-primary transition-colors">Terms of Service</Link>
+                <Link href="/privacy" className="hover:text-primary transition-colors">Privacy Policy</Link>
+              </li>
+              <li>
+                <Link href="/terms" className="hover:text-primary transition-colors">Terms of Service</Link>
               </li>
             </ul>
           </div>
@@ -67,8 +67,8 @@ export default function Footer() {
             <h4 className="text-xs font-black uppercase tracking-wider text-white">Connect</h4>
             <ul className="space-y-2 text-xs font-bold">
               <li>
-                <a
-                  href="https://linkedin.com"
+                <Link
+                  href="https://www.linkedin.com/in/omarfaruk28/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-1.5 hover:text-primary transition-colors"
@@ -80,11 +80,11 @@ export default function Footer() {
                   </svg>
                   <span>LinkedIn</span>
                   <ExternalLink className="h-2.5 w-2.5 opacity-50" />
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="https://github.com"
+                <Link
+                  href="https://github.com/omarfaruq2806"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-1.5 hover:text-primary transition-colors"
@@ -95,7 +95,7 @@ export default function Footer() {
                   </svg>
                   <span>Portfolio</span>
                   <ExternalLink className="h-2.5 w-2.5 opacity-50" />
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
