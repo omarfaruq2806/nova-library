@@ -1,36 +1,100 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# NovaLibrary 📚✨
 
-## Getting Started
+[![AI-Assisted Development](https://img.shields.io/badge/AI--Assisted-Development-blueviolet?style=for-the-badge&logo=google-gemini)](https://github.com/google-deepmind)
+[![Framework](https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=nextdotjs)](https://nextjs.org/)
+[![Database](https://img.shields.io/badge/MongoDB-Native-green?style=for-the-badge&logo=mongodb)](https://www.mongodb.com/)
+[![Storage](https://img.shields.io/badge/Supabase-Storage-emerald?style=for-the-badge&logo=supabase)](https://supabase.com/)
 
-First, run the development server:
+NovaLibrary is an **AI-powered digital library** designed to make reading, learning, and discovering knowledge more engaging and intelligent. Instead of simply storing books, NovaLibrary leverages generative AI to help readers parse contents faster, extract insights, and chat directly with uploaded books.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+---
+
+## 🤖 AI-Assisted Development Notice
+This repository was developed using **AI-Assisted Development** in active pair-programming collaboration with **Antigravity**, the advanced agentic AI coding assistant designed by **Google DeepMind's Advanced Agentic Coding team**. 
+
+The architecture, premium responsive layout animations (powered by `framer-motion`), self-healing API retries, and modular page structures were co-authored dynamically by the developer and the AI agent.
+
+---
+
+## 🌟 Core Features
+
+- **🤖 AI Book Summarization:** Automatically reads and generates high-fidelity 3-sentence summaries and key learning takeaways for uploaded PDFs using Google Gemini.
+- **💬 Chat with Any Book:** Features a conversational interface allowing readers to query, explain, and interact directly with the contents of uploaded PDFs.
+- **⬆️ Book Ingestion & Moderation:** Secure multi-stage book upload pipeline with automated tagging, language mapping, and admin-led approval dashboards.
+- **📊 Interactive Metrics:** Dynamic landing counter animations displaying live repository statistics.
+- **🌐 Explore & Filter Catalog:** Advanced categorization filters, searching, and sorting with a responsive mobile-friendly sliding drawer.
+- **🔑 Secure Authentication:** Full authentication workflows and role-based access control built using Better Auth and Google OAuth.
+
+---
+
+## 🛠️ Technology Stack
+
+### Frontend
+- **Framework:** Next.js (App Router) & React
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS & Vanilla CSS
+- **Animations:** Framer Motion (for smooth layouts, transitions, and slider controls)
+- **State Management & Queries:** TanStack React Query
+
+### Backend
+- **Framework:** Express.js (Node.js)
+- **Database:** MongoDB (Native Driver implementation, Mongoose-free)
+- **Object Storage:** Supabase Storage (for book covers and PDF uploads)
+- **Authentication:** Better Auth
+
+### Artificial Intelligence
+- **Orchestration:** LangChain
+- **LLM Engine:** Google Gemini API (gemini-3.5-flash)
+
+---
+
+## 🚀 Getting Started
+
+### 1. Prerequisites
+- **Node.js** (v18.x or higher)
+- **MongoDB Database** (Cloud Atlas URI or Local instance)
+- **Google Gemini API Key**
+- **Supabase Account** (Storage bucket set up)
+
+### 2. Environment Setup
+Create a `.env` file in the root of the `novalibrary` frontend and backend directories:
+
+```env
+NEXT_PUBLIC_API_URL=http://localhost:5000/api
+BETTER_AUTH_SECRET=your_auth_secret
+BETTER_AUTH_URL=http://localhost:3000
+MONGODB_URI=your_mongodb_connection_string
+GOOGLE_CLIENT_ID=your_google_oauth_client_id
+GOOGLE_CLIENT_SECRET=your_google_oauth_client_secret
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 3. Installation
+Install dependencies for both frontend and backend repositories:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+# In the frontend directory
+npm install
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# In the backend directory
+npm install
+```
 
-## Learn More
+### 4. Running the Development Servers
+Start the hot-reloading development instances:
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+# Run the frontend (Next.js)
+npm run dev
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# Run the backend (Express server)
+npm run dev
+```
+Open [http://localhost:3000](http://localhost:3000) in your browser to explore the ecosystem.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🛡️ License & Attributions
+Co-authored by **Omar Faruk** & **Antigravity AI (Google DeepMind)**. All rights reserved. 
+Happy Reading! 📚✨
