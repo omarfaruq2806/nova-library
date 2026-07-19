@@ -3,9 +3,10 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Search, Plus, Trash2, BookOpen, ExternalLink, RefreshCw, AlertCircle, Sparkles, Filter, SlidersHorizontal, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Search, Plus, Trash2, BookOpen, ExternalLink, RefreshCw, AlertCircle, Sparkles, Filter, SlidersHorizontal, ChevronLeft, ChevronRight, X } from 'lucide-react';
 import { toast } from 'sonner';
 import { useSession } from '../../lib/auth-client';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface Book {
   _id: string;
@@ -46,6 +47,7 @@ export default function BooksPage() {
   const [readingLevel, setReadingLevel] = useState('All');
   const [sort, setSort] = useState('newest');
   const [page, setPage] = useState(1);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   // Fetch paginated books with TanStack Query
   const {
@@ -133,7 +135,7 @@ export default function BooksPage() {
   );
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] bg-zinc-950 px-4 py-10 sm:px-6 lg:px-8 relative">
+    <div className="min-h-[calc(100vh-4rem)] bg-zinc-950 px-2 py-6 sm:px-6 lg:px-8 relative overflow-hidden">
       {/* Background glow effects */}
       <div className="absolute top-1/3 left-1/4 w-[500px] h-[500px] rounded-full bg-primary/5 blur-[140px] pointer-events-none" />
       <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full bg-secondary/5 blur-[120px] pointer-events-none" />
@@ -162,8 +164,8 @@ export default function BooksPage() {
           )}
         </div>
 
-        {/* Filters Controls Panel */}
-        <div className="space-y-4 bg-zinc-900/10 border border-zinc-900 rounded-2xl p-5 backdrop-blur-md">
+        {/* Desktop Filters Controls Panel */}
+        <div className="hidden md:block space-y-4 bg-zinc-900/10 border border-zinc-900 rounded-2xl p-5 backdrop-blur-md">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
             
             {/* Search Box */}
@@ -244,6 +246,188 @@ export default function BooksPage() {
 
           </div>
         </div>
+
+        {/* Mobile Filter & Search Trigger Bar */}
+        <div className="flex md:hidden gap-3 items-center bg-zinc-900/10 border border-zinc-900 rounded-2xl p-4 backdrop-blur-md">
+          <div className="relative flex-1">
+            <Search className="absolute left-3.5 top-3.5 h-4 w-4 text-zinc-500" />
+            <input
+              type="text"
+              placeholder="Search books..."
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setPage(1);
+              }}
+              className="w-full rounded-xl bg-zinc-950 border border-zinc-850 pl-10 pr-4 py-3 text-xs text-white placeholder-zinc-550 focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50"
+            />
+          </div>
+          <button
+            onClick={() => setIsDrawerOpen(true)}
+            className="flex items-center gap-2 rounded-xl border border-zinc-850 bg-zinc-950 px-4 py-3 text-xs font-bold text-white hover:bg-zinc-900 transition-all active:scale-95 cursor-pointer relative shrink-0"
+          >
+            <SlidersHorizontal className="h-4 w-4 text-zinc-400" />
+            <span>Filters</span>
+            {((genre !== 'All' ? 1 : 0) + (language !== 'All' ? 1 : 0) + (readingLevel !== 'All' ? 1 : 0) + (sort !== 'newest' ? 1 : 0)) > 0 && (
+              <span className="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] font-black text-white shadow-md shadow-primary/30">
+                {((genre !== 'All' ? 1 : 0) + (language !== 'All' ? 1 : 0) + (readingLevel !== 'All' ? 1 : 0) + (sort !== 'newest' ? 1 : 0))}
+              </span>
+            )}
+          </button>
+        </div>
+
+        {/* Drawer for Mobile View */}
+        <AnimatePresence>
+          {isDrawerOpen && (
+            <>
+              {/* Backdrop */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setIsDrawerOpen(false)}
+                className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm md:hidden"
+              />
+
+              {/* Drawer Content */}
+              <motion.div
+                initial={{ x: '100%' }}
+                animate={{ x: 0 }}
+                exit={{ x: '100%' }}
+                transition={{ type: 'spring', damping: 25, stiffness: 220 }}
+                className="fixed top-0 right-0 bottom-0 z-50 w-full max-w-xs bg-zinc-950/95 border-l border-zinc-900 p-6 shadow-2xl md:hidden overflow-y-auto flex flex-col justify-between backdrop-blur-md"
+              >
+                <div className="space-y-6">
+                  {/* Header */}
+                  <div className="flex items-center justify-between border-b border-zinc-900 pb-4">
+                    <div className="flex items-center gap-2">
+                      <SlidersHorizontal className="h-4 w-4 text-primary" />
+                      <h2 className="text-sm font-bold text-white">Search & Filters</h2>
+                    </div>
+                    <button
+                      onClick={() => setIsDrawerOpen(false)}
+                      className="p-2 rounded-xl bg-zinc-900 hover:bg-zinc-850 border border-zinc-850 text-zinc-400 hover:text-white transition-colors cursor-pointer"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                  </div>
+
+                  {/* Form Fields */}
+                  <div className="space-y-5">
+                    {/* Search Field */}
+                    <div className="space-y-1.5">
+                      <label className="text-[11px] font-bold text-zinc-400 uppercase tracking-wider">Search Query</label>
+                      <div className="relative">
+                        <Search className="absolute left-3 top-3 h-4 w-4 text-zinc-500" />
+                        <input
+                          type="text"
+                          placeholder="Search title, author, desc..."
+                          value={search}
+                          onChange={(e) => {
+                            setSearch(e.target.value);
+                            setPage(1);
+                          }}
+                          className="w-full rounded-xl bg-zinc-900 border border-zinc-850 pl-9 pr-4 py-2.5 text-xs text-white placeholder-zinc-550 focus:outline-none focus:border-primary/50"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Sorting Field */}
+                    <div className="space-y-1.5">
+                      <label className="text-[11px] font-bold text-zinc-400 uppercase tracking-wider">Sort By</label>
+                      <select
+                        value={sort}
+                        onChange={(e) => {
+                          setSort(e.target.value);
+                          setPage(1);
+                        }}
+                        className="w-full rounded-xl bg-zinc-900 border border-zinc-850 px-4 py-2.5 text-xs text-white focus:outline-none focus:border-primary/50 cursor-pointer"
+                      >
+                        <option value="newest">Newest</option>
+                        <option value="oldest">Oldest</option>
+                        <option value="title_asc">Title: A to Z</option>
+                        <option value="title_desc">Title: Z to A</option>
+                        <option value="author_asc">Author: A to Z</option>
+                        <option value="author_desc">Author: Z to A</option>
+                      </select>
+                    </div>
+
+                    {/* Category Selector */}
+                    <div className="space-y-1.5">
+                      <label className="text-[11px] font-bold text-zinc-400 uppercase tracking-wider">Category</label>
+                      <select
+                        value={genre}
+                        onChange={(e) => handleFilterChange('genre', e.target.value)}
+                        className="w-full rounded-xl bg-zinc-900 border border-zinc-850 px-4 py-2.5 text-xs text-white focus:outline-none focus:border-primary/50 cursor-pointer"
+                      >
+                        <option value="All">All Categories</option>
+                        {CATEGORIES.filter(c => c !== 'All').map((c) => (
+                          <option key={c} value={c}>{c}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {/* Language Selector */}
+                    <div className="space-y-1.5">
+                      <label className="text-[11px] font-bold text-zinc-400 uppercase tracking-wider">Language</label>
+                      <select
+                        value={language}
+                        onChange={(e) => handleFilterChange('language', e.target.value)}
+                        className="w-full rounded-xl bg-zinc-900 border border-zinc-850 px-4 py-2.5 text-xs text-white focus:outline-none focus:border-primary/50 cursor-pointer"
+                      >
+                        <option value="All">All Languages</option>
+                        {LANGUAGES.filter(l => l !== 'All').map((l) => (
+                          <option key={l} value={l}>{l}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {/* Reading Level Selector */}
+                    <div className="space-y-1.5">
+                      <label className="text-[11px] font-bold text-zinc-400 uppercase tracking-wider">Reading Level</label>
+                      <select
+                        value={readingLevel}
+                        onChange={(e) => handleFilterChange('readingLevel', e.target.value)}
+                        className="w-full rounded-xl bg-zinc-900 border border-zinc-850 px-4 py-2.5 text-xs text-white focus:outline-none focus:border-primary/50 cursor-pointer"
+                      >
+                        <option value="All">All Reading Levels</option>
+                        {READING_LEVELS.filter(r => r !== 'All').map((r) => (
+                          <option key={r} value={r}>{r}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Drawer Footer Actions */}
+                <div className="mt-8 space-y-3 pt-4 border-t border-zinc-900">
+                  {((genre !== 'All') || (language !== 'All') || (readingLevel !== 'All') || (sort !== 'newest') || (search !== '')) && (
+                    <button
+                      onClick={() => {
+                        setSearch('');
+                        setGenre('All');
+                        setLanguage('All');
+                        setReadingLevel('All');
+                        setSort('newest');
+                        setPage(1);
+                      }}
+                      className="w-full py-2.5 rounded-xl border border-zinc-850 hover:border-red-950 text-xs font-bold text-zinc-400 hover:text-red-400 hover:bg-red-950/10 transition-all cursor-pointer text-center"
+                    >
+                      Reset All Filters
+                    </button>
+                  )}
+
+                  <button
+                    onClick={() => setIsDrawerOpen(false)}
+                    className="w-full py-2.5 rounded-xl bg-gradient-to-r from-primary to-secondary text-xs font-bold text-white shadow-lg shadow-primary/10 hover:opacity-90 active:scale-95 transition-all cursor-pointer text-center"
+                  >
+                    Apply & Close
+                  </button>
+                </div>
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>
 
         {/* Loading / Error States */}
         {isLoading ? (
