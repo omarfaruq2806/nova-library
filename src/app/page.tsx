@@ -5,6 +5,14 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { BookOpen, Sparkles, Shield, Cpu, ArrowRight } from 'lucide-react';
 import { useSession } from '../lib/auth-client';
+import AiFeatures from '../components/AiFeatures';
+import DiscoverBooks from '../components/DiscoverBooks';
+import ExploreCategories from '../components/ExploreCategories';
+import HowItWorks from '../components/HowItWorks';
+import WhyChooseUs from '../components/WhyChooseUs';
+import LibraryStats from '../components/LibraryStats';
+import FaqSection from '../components/FaqSection';
+import FinalCta from '../components/FinalCta';
 
 export default function Home() {
   const { data: session } = useSession();
@@ -34,7 +42,7 @@ export default function Home() {
       <div className="absolute bottom-10 right-10 w-[400px] h-[400px] rounded-full bg-secondary/5 blur-[120px] pointer-events-none" />
 
       {/* Hero Content Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 flex-1 flex flex-col justify-center items-center text-center z-10 space-y-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 flex flex-col justify-center items-center text-center z-10 space-y-12">
         
         {/* Sparkle Badge */}
         <motion.div
@@ -116,6 +124,57 @@ export default function Home() {
         </motion.div>
 
       </div>
+
+      {/* Divider */}
+      <div className="w-full h-px bg-gradient-to-r from-transparent via-zinc-900 to-transparent" />
+
+      {/* AI Features Section */}
+      <AiFeatures />
+
+      {/* Divider */}
+      <div className="w-full h-px bg-gradient-to-r from-transparent via-zinc-900 to-transparent" />
+
+      {/* Discover Books Section */}
+      <DiscoverBooks />
+
+      {/* Divider */}
+      <div className="w-full h-px bg-gradient-to-r from-transparent via-zinc-900 to-transparent" />
+
+      {/* Explore Categories Section */}
+      <ExploreCategories />
+
+      {/* Divider */}
+      <div className="w-full h-px bg-gradient-to-r from-transparent via-zinc-900 to-transparent" />
+
+      {/* How It Works Section */}
+      <HowItWorks />
+
+      {/* Divider */}
+      <div className="w-full h-px bg-gradient-to-r from-transparent via-zinc-900 to-transparent" />
+
+      {/* Why Choose Us Section */}
+      <WhyChooseUs />
+
+      {/* Divider */}
+      <div className="w-full h-px bg-gradient-to-r from-transparent via-zinc-900 to-transparent" />
+
+      {/* Library Stats Section */}
+      <LibraryStats />
+
+      {/* Divider */}
+      <div className="w-full h-px bg-gradient-to-r from-transparent via-zinc-900 to-transparent" />
+
+      {/* FAQ Section */}
+      <FaqSection />
+
+      {/* Divider */}
+      <div className="w-full h-px bg-gradient-to-r from-transparent via-zinc-900 to-transparent" />
+
+      {/* Final CTA Section */}
+      <FinalCta />
+
+      {/* Divider */}
+      <div className="w-full h-px bg-gradient-to-r from-transparent via-zinc-900 to-transparent" />
     </div>
   );
 }

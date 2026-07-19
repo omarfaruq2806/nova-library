@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Search, Plus, Trash2, BookOpen, ExternalLink, RefreshCw, AlertCircle, Sparkles, Filter, SlidersHorizontal, ChevronLeft, ChevronRight, X } from 'lucide-react';
@@ -74,7 +74,30 @@ export default function BooksPage() {
       }
       return res.json();
     },
+    retry: 4,
+    retryDelay: 1500, // Wait 1.5s between retries (useful during server auto-restarts)
   });
+
+  // Auto-retry refetching every 4 seconds if database/backend request fails
+  useEffect(() => {
+    if (isError) {
+      const interval = setInterval(() => {
+        refetch();
+      }, 4000);
+      return () => clearInterval(interval);
+    }
+  }, [isError, refetch]);
+
+  // Read initial genre filter from URL query parameter
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const queryGenre = params.get('genre');
+      if (queryGenre && CATEGORIES.includes(queryGenre)) {
+        setGenre(queryGenre);
+      }
+    }
+  }, []);
 
   const { books = [], totalPages = 1 } = data || {};
 
